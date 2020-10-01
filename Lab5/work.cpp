@@ -8,9 +8,9 @@ void setcursor(bool);
 void setcolor(int, int);
 void draw_shot(int, int);
 void erase_shot(int, int);
-
+//ยาว 80 สูง 20
 int main() {
-	int x = 38, y = 20, position_x[5],position_y[5],shot[5];
+	int x = 38, y = 20, position_x[5],position_y[5],shot[5],num=0;
 	char ch = ' ';
 	setcursor(0);
 
@@ -19,70 +19,56 @@ int main() {
 		shot[i] = 0;		//กำหนดค่าของกระสุนไว้ ไม่ให้เป็นค่าขยะเฉยๆ	
 	}
 
+
 	do {
 		if (_kbhit()) {
 			ch = _getch();
-		base1 :	if (ch == 'a' && x > 0) {
-				do {	// วิ่งซ้ายเรื่อยๆ จนกว่าจะชนหรือกด s
-					erase_ship(x, y);
-					draw_ship(--x, y); //ให้ขยับไปทางซ้าย		
-					Sleep(100);
-					if (_kbhit()) {     // รับค่าคีบิดอีกครั้งนึง
-						ch = _getch();
-					}
-					if (ch == 'd') { goto base2; }  //เข้าไปทำ b
-				}while (x > 0 && ch != 's');   //เจอ s จะหยุด
+				if (ch == 'a' ) {    
+					num = 1;		
 			}
+   //เป็นการรับค่าเข้าาเฉยๆเพื่อจะได้รู้ว่าไปซ้ายไปขวาคือตัวเลขอะไรแล้วไปเช็ตเงื่อนไขการเคลื่อนที่ข้างล่าง
 
-
-		base2 :	if (ch == 'd' && x < 73) {
-				do {
-					erase_ship(x, y);	//ให้ขยับไปทางขวา
-					draw_ship(++x, y);
-					Sleep(100);
-					if (_kbhit()) {
-						ch = _getch();
-					}
-					if (ch == 'a') { goto base1; }  //เข้าไปทำ a
-				} while (x < 73 && ch != 's' );
+				if (ch == 'd' ) {
+					num = 2;
 			}
 
 		
-			if (ch == 'w'&& y>0) {
-				erase_ship(x, y);	//ให้ขยับขึ้นบน
-				draw_ship(x, --y);
-	
+				if (ch == 's') {   // วิ่งซ้ายขวาเรื่อยๆ จนกว่าจะชนหรือกด s
+					num = 3; 
 			} 
-
+		
 						
 			if (ch == ' ') {   // กด spacbar เพิ้อ ยิงกระสุน
 
-				for (int i = 0;i<5;i++) {
-					if(shot[i]==0){			// งงงงงงงงงงงงงงงงงงงงงงงงงงงงงงงงงงงง
-					
-						shot[i] = 1;
-						position_x[i] = x;  // ค่า x เป็นค่าของยาน เลยเป็นยานออกมา
+				for (int i = 0;i<5;i++) { //แค่ทำให้ครบรอบเฉยๆ แต่จริงๆไม่ต้องวนลูปก็ได้
+					if(shot[i]==0){			 
+				
+						shot[i] = 1;		//เซ้ทค่าเพื่อเอาไปใช้ให้มันขยับ ใน for ข้างล่าง 
+						position_x[i] = x;  // ใช้ค่าตน.ของยานมาให้เท่ากับ ตัวแปร position 
 						position_y[i] = y - 2;
-						draw_shot(position_x[i], position_y[i] );
+						draw_shot(position_x[i], position_y[i] ); // ใช้ค่า x เป็นค่าของยาน เลยเป็นยานออกมา
 						break;
 						
 					} 
 				}
 			}
 
-
-				/*		if (ch == 's'&& y<24) {
-							erase_ship(x, y);	//ให้ขยับลงล่าง
-							draw_ship(x, ++y);
-
-						}
-				*/
-			
 			fflush(stdin);
+		}  // จบif ใหญ่
+
+		//เงื่อนไขในการเช็คว่าไปซ้ายไปขวา
+		if (num == 1 && x > 0)    //ไปทางซ้าย
+		{
+			erase_ship(x, y); draw_ship(--x, y);
 		}
+		if (num == 2 && x < 73)	 //ไปทางขวา
+		{
+			erase_ship(x, y); draw_ship(++x, y);
+		}  // ถ้าให้มันหยุดคือกด s ถ้ากด s ค่ามันคือ 3 มันจะไม่เข้าเงื่อไขไหนเลยมันก็จะหยุด
+		
 
 		for (int i = 0; i < 5; i++) {
-			if (shot[i] == 1)    //เปิดค่าให้มันยิงมา
+			if (shot[i] == 1)    //ค่าที่รับจากลูปด้านบน เปิดค่าให้มันยิงมา
 			{
 
 				erase_shot(position_x[i], position_y[i]);
